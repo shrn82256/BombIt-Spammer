@@ -25,7 +25,7 @@ class Spammer:
         driver.get("https://www.redbus.in/account?pageName=Home&noReload=noReload")
 
         i = 0
-        while i <= self.bomb_count:
+        while self.spam_count <= self.bomb_count:
             mobile_input = driver.find_element_by_id("mobileNoInp")
             mobile_input.clear()
             mobile_input.send_keys(self.mobile_no)
