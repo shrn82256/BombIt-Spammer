@@ -10,3 +10,5 @@ You need selenium which can be acquired by
 pip install selenium
 
 And you might want to change the chromedriver if you're not on windows...
+
+This was made purely for entertainment purposes and an experiment on how selenium may be used... If you use this, you are completely responsible for your actions.
